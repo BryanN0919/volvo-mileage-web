@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Generate a monthly mileage reimbursement form from a Volvo Trips Log Excel export." />
+  <title>Volvo Mileage Reimbursement Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="brand-mark" aria-hidden="true">M</div>
+      <div>
+        <p class="eyebrow">Mileage reimbursement</p>
+        <h1>Volvo Trip Log Generator</h1>
+        <p class="hero-copy">Import a Volvo trips Excel file, review reimbursable business travel, and download a completed monthly mileage form.</p>
+      </div>
+      <div class="privacy-pill" title="Your file stays in your browser">
+        <span class="privacy-dot"></span>
+        Local processing
+      </div>
+    </header>
+
+    <section class="workflow" aria-label="Mileage form workflow">
+      <div class="step active" id="stepImport"><span>1</span><div><strong>Import</strong><small>Choose trip log</small></div></div>
+      <div class="step" id="stepReview"><span>2</span><div><strong>Review</strong><small>Confirm trips</small></div></div>
+      <div class="step" id="stepGenerate"><span>3</span><div><strong>Generate</strong><small>Download form</small></div></div>
+    </section>
+
+    <section class="card upload-card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Step 1</p>
+          <h2>Import Volvo trip log</h2>
+          <p>Select the <code>volvo-trips-log.xlsx</code> file exported from Volvo.</p>
+        </div>
+      </div>
+
+      <label class="drop-zone" id="dropZone" for="fileInput">
+        <input id="fileInput" type="file" accept=".xlsx,.xlsm" hidden />
+        <div class="upload-icon" aria-hidden="true">↑</div>
+        <strong>Drop your Volvo trip log here</strong>
+        <span>or click to choose an Excel file</span>
+        <button type="button" class="secondary-btn" id="chooseButton">Choose file</button>
+      </label>
+
+      <div class="file-status hidden" id="fileStatus">
+        <div class="file-badge">XLSX</div>
+        <div class="file-meta">
+          <strong id="fileName">volvo-trips-log.xlsx</strong>
+          <span id="fileDetails"></span>
+        </div>
+        <button class="link-btn" id="changeFile" type="button">Change</button>
+      </div>
+
+      <div class="message hidden" id="message" role="status"></div>
+    </section>
+
+    <section class="results hidden" id="resultsSection">
+      <div class="summary-grid">
+        <article class="metric-card">
+          <span>Reimbursable trips</span>
+          <strong id="tripCount">0</strong>
+          <small id="excludedCount">0 excluded</small>
+        </article>
+        <article class="metric-card">
+          <span>Total miles</span>
+          <strong id="totalMiles">0.0</strong>
+          <small>End odometer − start odometer</small>
+        </article>
+        <article class="metric-card">
+          <span>Rate per mile</span>
+          <div class="rate-input-wrap"><span>$</span><input id="rateInput" type="number" min="0" step="0.001" value="0.625" /></div>
+          <small>Editable before download</small>
+        </article>
+        <article class="metric-card accent">
+          <span>Estimated reimbursement</span>
+          <strong id="totalPay">$0.000</strong>
+          <small id="detectedMonth">Month not detected</small>
+        </article>
+      </div>
+
+      <section class="card review-card">
+        <div class="section-heading review-heading">
+          <div>
+            <p class="eyebrow">Step 2</p>
+            <h2>Review reimbursable trips</h2>
+            <p>Business trips with positive mileage are selected automatically. Uncheck any trip you do not want included.</p>
+          </div>
+          <div class="table-actions">
+            <button type="button" class="link-btn" id="selectAll">Select all</button>
+            <button type="button" class="link-btn" id="clearAll">Clear all</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-col"><input type="checkbox" id="masterCheckbox" checked aria-label="Select all trips" /></th>
+                <th>Date</th>
+                <th>Starting location</th>
+                <th>Ending location</th>
+                <th class="number-col">Start</th>
+                <th class="number-col">End</th>
+                <th class="number-col">Miles</th>
+                <th class="number-col">Reimbursement</th>
+              </tr>
+            </thead>
+            <tbody id="tripTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card generate-card">
+        <div>
+          <p class="eyebrow">Step 3</p>
+          <h2>Generate reimbursement form</h2>
+          <p>The downloaded workbook uses the July 2026 mileage form as its template and updates the month, trip rows, totals, and reimbursement formulas.</p>
+        </div>
+        <button type="button" class="primary-btn" id="generateButton">
+          <span>Generate Excel Form</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+    </section>
+
+    <footer>
+      <p><strong>Automatic rules:</strong> Category must be Business • zero/negative-mile trips are excluded • trips are ordered newest first • calculations use odometer difference.</p>
+      <p class="fine-print">The selected Volvo file is processed in your browser. The page does not upload trip data to a server.</p>
+    </footer>
+  </main>
+
+  <div class="loading-overlay hidden" id="loadingOverlay" aria-live="polite">
+    <div class="spinner"></div>
+    <strong id="loadingText">Processing trip log…</strong>
+  </div>
+
+  <script src="jszip.min.js"></script>
+  <script src="template-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
