@@ -9,7 +9,7 @@
     'End address'
   ];
 
-  const FORM_SHEET_NAME = '2022 Mileage Log';
+  const FORM_SHEET_NAME = 'Mileage Log';
   const FIRST_DATA_ROW = 9;
   const TEMPLATE_LAST_DATA_ROW = 72;
   const TEMPLATE_TOTALS_ROW = 73;
