@@ -663,6 +663,7 @@
       setNumber(sheetDoc, sheetData, 'D3', dateToExcelSerial(endOfMonth(monthDate)));
       setInlineString(sheetDoc, sheetData, 'J3', monthName);
       setNumber(sheetDoc, sheetData, 'J4', state.rate);
+      const rateCell = getOrCreateCell(sheetDoc, sheetData, 'J4');
       setInlineString(sheetDoc, sheetData, `J${layout.totalsRow}`, 'Totals');
       setFormula(sheetDoc, sheetData, `K${layout.totalsRow}`, `SUM(K${FIRST_DATA_ROW}:K${layout.dataLastRow})`, totalMiles);
       setFormula(sheetDoc, sheetData, `L${layout.totalsRow}`, `SUM(L${FIRST_DATA_ROW}:L${layout.dataLastRow})`, totalPay);
